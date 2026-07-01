@@ -1,4 +1,7 @@
 push.bat
 publish.bat
+publish_auto.bat
+setup_schedule.bat
 push_log.txt
+schedule_log.txt
 node_modules/
