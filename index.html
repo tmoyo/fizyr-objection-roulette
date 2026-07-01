@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fizyr OS — Objection Roulette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --midnight:#152a3a; --mint:#4cb392; --teal4:#025677; --teal2:#169096;
+    --green4:#00a48b; --blue4:#0b3e58; --grey1:#e5e5e5; --grey4:#b3b3b3;
+    --ink:#0e2230; --card:#ffffff;
+    --easy:#4cb392; --medium:#169096; --hard:#e0a500; --miss:#9aa6ad; --hit:#4cb392;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; font-family:'Rubik',Arial,sans-serif; color:var(--grey1);
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(76,179,146,.18), transparent 60%),
+      radial-gradient(900px 600px at -10% 110%, rgba(22,144,150,.20), transparent 55%),
+      var(--midnight);
+    display:flex; flex-direction:column; align-items:center; padding:22px 16px 60px;
+  }
+  header{width:100%; max-width:780px; display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .brand h1{font-weight:300; font-size:30px; letter-spacing:-1px; margin:0; color:#fff;}
+  .brand h1 b{font-weight:600; color:var(--mint);}
+  .brand .tag{font-size:12.5px; color:var(--grey4); letter-spacing:.5px; margin-top:2px;}
+  .scoreboard{display:flex; gap:10px;}
+  .stat{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10); border-radius:12px; padding:8px 14px; text-align:center; min-width:74px;}
+  .stat .n{font-size:22px; font-weight:600; color:#fff; line-height:1;}
+  .stat .l{font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--grey4); margin-top:4px;}
+
+  .filters{width:100%; max-width:780px; display:flex; flex-wrap:wrap; gap:7px; margin:18px 0 6px;}
+  .chip{font-family:inherit; font-size:12.5px; color:var(--grey1); background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14); padding:6px 12px; border-radius:999px; cursor:pointer; transition:.15s;}
+  .chip:hover{border-color:var(--mint);}
+  .chip.active{background:var(--mint); color:var(--midnight); border-color:var(--mint); font-weight:600;}
+
+  .stage{width:100%; max-width:780px; perspective:2000px; margin-top:14px;}
+  .flip{position:relative; width:100%; min-height:500px; transition:transform .55s cubic-bezier(.4,.1,.2,1); transform-style:preserve-3d;}
+  .flip.flipped{transform:rotateY(180deg);}
+  .face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:20px; padding:24px 26px; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,.42); overflow:auto;}
+  .front{background:#ffffff; color:var(--ink);}
+  .back{background:linear-gradient(165deg,#13283a,#1c3a4f); color:var(--grey1); transform:rotateY(180deg);}
+
+  .meta{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .cat{font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.2px; color:var(--teal4); background:rgba(2,86,119,.10); padding:5px 10px; border-radius:999px;}
+  .diff{font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; padding:5px 10px; border-radius:999px; color:#fff;}
+  .diff.easy{background:var(--easy);} .diff.medium{background:var(--medium);} .diff.hard{background:var(--hard); color:#3a2c00;}
+  .num{margin-left:auto; font-size:12px; color:var(--grey4); font-weight:500;}
+
+  .prompt{font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:var(--grey4); margin:16px 0 6px;}
+  .objection{font-size:23px; line-height:1.3; font-weight:400; color:var(--ink);}
+  .front.spinning .objection{opacity:.45; filter:blur(.4px);}
+  .quote-mark{color:var(--mint); font-weight:700;}
+
+  /* capture */
+  .capture{margin-top:14px; border:1.5px dashed #cfdbd9; border-radius:14px; padding:13px;}
+  .capRow{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .mic{font-family:inherit; font-weight:600; font-size:14px; border:none; border-radius:10px; padding:9px 15px; cursor:pointer; background:var(--teal4); color:#fff; display:flex; align-items:center; gap:8px; transition:.15s;}
+  .mic:hover{filter:brightness(1.1);}
+  .mic.live{background:#d9534f; animation:pulse 1.2s infinite;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,83,79,.5);}50%{box-shadow:0 0 0 7px rgba(217,83,79,0);}}
+  .capStatus{font-size:12px; color:var(--grey4);}
+  .transcript{width:100%; margin-top:11px; min-height:64px; border:1px solid #d6e0de; border-radius:10px; padding:11px 12px; font-family:inherit; font-size:14.5px; line-height:1.45; color:var(--ink); resize:vertical; background:#f7faf9;}
+  .transcript:focus{outline:2px solid var(--mint); border-color:var(--mint);}
+  .interim{color:var(--grey4); font-style:italic;}
+
+  .timer{display:flex; align-items:center; gap:12px; margin-top:12px;}
+  .timebar{flex:1; height:8px; background:var(--grey1); border-radius:999px; overflow:hidden;}
+  .timefill{height:100%; width:100%; background:var(--mint); border-radius:999px;}
+  .timefill.warn{background:var(--hard);} .timefill.over{background:#d9534f;}
+  .timetext{font-size:13px; font-weight:600; color:var(--ink); min-width:62px; text-align:right;}
+
+  .row{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+  button.act{font-family:inherit; font-size:15px; font-weight:600; border:none; border-radius:12px; padding:13px 20px; cursor:pointer; transition:.15s; flex:1; min-width:150px;}
+  .spin{background:var(--mint); color:var(--midnight);} .spin:hover{filter:brightness(1.06);}
+  .reveal{background:var(--teal4); color:#fff;} .reveal:hover{filter:brightness(1.1);}
+
+  /* back */
+  .back h3{margin:0 0 8px; font-weight:300; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--mint);}
+  .evalTop{display:flex; align-items:center; gap:16px; margin-top:16px; flex-wrap:wrap;}
+  .ring{--p:0; width:78px; height:78px; border-radius:50%; flex:0 0 auto; background:conic-gradient(var(--mint) calc(var(--p)*1%), rgba(255,255,255,.12) 0); display:flex; align-items:center; justify-content:center;}
+  .ring .inner{width:60px; height:60px; border-radius:50%; background:#16303f; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .ring .pct{font-size:19px; font-weight:600; color:#fff; line-height:1;}
+  .ring .pl{font-size:8.5px; letter-spacing:1px; color:var(--grey4); text-transform:uppercase; margin-top:2px;}
+  .evalSummary{font-size:14px; line-height:1.45; color:#dfeae8;}
+  .evalSummary b{color:#fff;}
+  .gradeTag{display:inline-block; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; padding:4px 9px; border-radius:999px; margin-top:6px;}
+  .g-strong{background:var(--mint); color:var(--midnight);} .g-ok{background:var(--teal2); color:#fff;} .g-weak{background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.25);}
+
+  .beatChecklist{margin-top:18px;}
+  .beatChecklist ul{margin:0; padding:0; list-style:none;}
+  .beatChecklist li{display:flex; gap:10px; align-items:flex-start; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.07); font-size:14px; line-height:1.4;}
+  .bmark{flex:0 0 auto; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; margin-top:1px;}
+  .bmark.hit{background:var(--hit); color:#06251c;} .bmark.miss{background:rgba(255,255,255,.10); color:var(--miss); border:1px solid rgba(255,255,255,.2);}
+  .btext{color:#e9f1ef;} .btext.miss{color:#b9c4c2;}
+  .bmatched{display:block; font-size:11.5px; color:var(--grey4); margin-top:3px;}
+  .bmatched span{color:var(--mint);}
+
+  .answerBox{margin-top:18px;}
+  .answer{font-size:14.5px; line-height:1.5; color:#eef4f3; font-weight:300;}
+  .reframe-flag{display:flex; gap:9px; align-items:flex-start; background:rgba(224,165,0,.14); border:1px solid rgba(224,165,0,.5); border-radius:12px; padding:11px 13px; margin:14px 0 4px;}
+  .reframe-flag .ico{font-size:18px;} .reframe-flag .txt{font-size:13px; line-height:1.4; color:#ffe9b0;} .reframe-flag b{color:#ffd166;}
+  details.tr{margin-top:14px;} details.tr summary{cursor:pointer; font-size:12.5px; color:var(--grey4); letter-spacing:.5px;} details.tr p{font-size:13.5px; line-height:1.45; color:#cdd9d7; background:rgba(0,0,0,.18); border-radius:8px; padding:10px 12px; margin-top:8px; white-space:pre-wrap;}
+
+  .scoreRow{margin-top:18px; padding-top:14px; border-top:1px solid rgba(255,255,255,.08);}
+  .scoreRow .lbl{font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:var(--grey4); margin-bottom:9px;}
+  .scoreBtns{display:flex; gap:9px; flex-wrap:wrap;}
+  .sbtn{font-family:inherit; font-weight:600; font-size:13.5px; border:none; border-radius:11px; padding:11px 14px; cursor:pointer; flex:1; min-width:120px; transition:.15s;}
+  .s2{background:var(--mint); color:var(--midnight);} .s1{background:var(--teal2); color:#fff;}
+  .s0{background:rgba(255,255,255,.10); color:#fff; border:1px solid rgba(255,255,255,.22);}
+  .sbtn:hover{filter:brightness(1.08); transform:translateY(-1px);}
+
+  .empty{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; height:100%; min-height:440px; color:var(--grey4);}
+  .empty .big{font-size:46px; margin-bottom:8px;}
+  .empty p{font-size:16px; color:var(--ink); max-width:430px; line-height:1.5;}
+
+  .toast{position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--midnight); color:#fff; border:1px solid var(--mint); padding:11px 18px; border-radius:12px; font-size:14px; opacity:0; pointer-events:none; transition:.3s; z-index:5;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .controls{display:flex; gap:14px; align-items:center; margin-top:14px; font-size:12.5px; color:var(--grey4); flex-wrap:wrap; justify-content:center;}
+  .controls label{display:flex; gap:6px; align-items:center; cursor:pointer;}
+  input[type=checkbox]{accent-color:var(--mint); width:15px; height:15px;}
+  footer{margin-top:20px; font-size:11.5px; color:var(--grey4); text-align:center; max-width:660px; line-height:1.55;}
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Fizyr OS · <b>Objection Roulette</b></h1>
+      <div class="tag">Sales &amp; BD training · Robot vision solved.</div>
+    </div>
+    <div class="scoreboard">
+      <div class="stat"><div class="n" id="sScore">0</div><div class="l">Score</div></div>
+      <div class="stat"><div class="n" id="sStreak">0</div><div class="l">Streak</div></div>
+      <div class="stat"><div class="n" id="sDrawn">0/41</div><div class="l">Drawn</div></div>
+    </div>
+  </header>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="stage">
+    <div class="flip" id="flip">
+      <div class="face front" id="front">
+        <div class="empty" id="emptyState">
+          <div class="big">🎯</div>
+          <p>Pick a category (or leave it on <b>All</b>) and hit <b>Spin</b>. A random customer objection lands — <b>speak your answer</b> (the mic transcribes it live) or type it, then hit <b>Score &amp; reveal</b> to see how well you covered the key beats against the model answer.</p>
+        </div>
+        <div id="frontContent" style="display:none; flex:1; flex-direction:column;">
+          <div class="meta">
+            <span class="cat" id="fCat"></span>
+            <span class="diff" id="fDiff"></span>
+            <span class="num" id="fNum"></span>
+          </div>
+          <div class="prompt">The customer says…</div>
+          <div class="objection" id="fObjection"></div>
+
+          <div class="capture" id="capture">
+            <div class="capRow">
+              <button class="mic" id="micBtn">🎤 <span id="micLabel">Record answer</span></button>
+              <span class="capStatus" id="capStatus">Click to speak — or just type below.</span>
+            </div>
+            <textarea class="transcript" id="transcript" placeholder="Your spoken answer appears here. You can edit it before scoring."></textarea>
+          </div>
+
+          <div class="timer" id="timerWrap" style="display:none;">
+            <div class="timebar"><div class="timefill" id="timefill"></div></div>
+            <div class="timetext" id="timetext">0:45</div>
+          </div>
+          <div class="row">
+            <button class="act spin" id="spinBtn2">↻ Re-spin</button>
+            <button class="act reveal" id="revealBtn">Score &amp; reveal ▸</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="face back" id="back">
+        <div class="meta">
+          <span class="cat" id="bCat"></span>
+          <span class="diff" id="bDiff"></span>
+          <span class="num" id="bNum"></span>
+        </div>
+
+        <h3 style="margin-top:16px;">Auto-evaluation</h3>
+        <div class="evalTop">
+          <div class="ring" id="ring"><div class="inner"><div class="pct" id="ringPct">0%</div><div class="pl">covered</div></div></div>
+          <div class="evalSummary" id="evalSummary"></div>
+        </div>
+
+        <div class="beatChecklist">
+          <h3 style="margin-top:18px;">Key beats — did the answer land them?</h3>
+          <ul id="bBeats"></ul>
+        </div>
+
+        <details class="tr" id="trWrap"><summary>▸ Show captured answer</summary><p id="trText"></p></details>
+
+        <div class="answerBox">
+          <h3>Model answer · Fizyr voice</h3>
+          <div class="answer" id="bAnswer"></div>
+          <div class="reframe-flag" id="bReframe" style="display:none;">
+            <span class="ico">⚑</span>
+            <span class="txt"><b>Reframe — don't concede the gap.</b> <span id="bReframeTxt"></span></span>
+          </div>
+        </div>
+
+        <div class="scoreRow">
+          <div class="lbl">Final grade (human override)</div>
+          <div class="scoreBtns">
+            <button class="sbtn s2" data-pts="2">Nailed it +2</button>
+            <button class="sbtn s1" data-pts="1">Got there +1</button>
+            <button class="sbtn s0" data-pts="0">Fumbled +0</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="act spin" id="spinBtn" style="flex:0 0 auto; min-width:200px;">🎲 Spin the wheel</button>
+    <label><input type="checkbox" id="timerToggle"> 45-second timer</label>
+    <span id="speechNote"></span>
+  </div>
+
+  <footer>
+    41 objections from the live Fizyr OS customer FAQ. Voice transcription uses your browser's built-in speech engine
+    (best in Chrome/Edge). Auto-scoring is keyword-based — a coaching aid, not a verdict; the human grade is final.
+    Weight scoring toward the <b>⚑ reframe</b> on flagged cards.
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+const CARDS = [
+ {
+  "id": 1,
+  "cat": "Capabilities",
+  "diff": "easy",
+  "q": "We're evaluating a few vision vendors. What can Fizyr OS actually do for us?",
+  "a": "Fizyr OS powers a wide range of handling applications: trailer and container unloading, depalletizing and palletizing, bin picking, parcel singulation, general pick-and-place, and quality inspection. The same core vision engine adapts across all of them, so you can standardize on one platform across multiple lines and sites.",
+  "beats": [
+   "One engine, many apps: un/loading, de/palletizing, bin picking, singulation, inspection.",
+   "Lead with standardizing on a single vision platform across lines and sites."
+  ]
+ },
+ {
+  "id": 2,
+  "cat": "Capabilities",
+  "diff": "medium",
+  "q": "Our products are unusual — crushed cartons, poly bags, odd shapes. Will it really handle our mix?",
+  "a": "In most cases, yes. Our neural networks are designed to generalize across enormous variety — poly bags, crushed or damaged cartons, hinged and irregular items, loose components, food packaging, dishware, and reflective parts all fall within scope. For new applications we validate against your real product mix during a proof of concept so you can see performance on your items before committing.",
+  "beats": [
+   "Neural networks generalize across huge variety — bags, crushed cartons, food, reflective parts.",
+   "Close on: we prove it on your product mix in a proof of concept before you commit."
+  ]
+ },
+ {
+  "id": 3,
+  "cat": "Capabilities",
+  "diff": "easy",
+  "q": "Don't we have to train it on every single SKU before it works?",
+  "a": "No. Fizyr OS uses a generalized vision model that detects and picks items it has never seen before, so you don't need to maintain a catalogue of every SKU. For standard use cases it works out of the box, and performance can be further tuned for demanding or specialized applications.",
+  "beats": [
+   "No SKU catalogue — generalized model picks items it has never seen.",
+   "Works out of the box; tuning is optional, only for demanding cases."
+  ]
+ },
+ {
+  "id": 4,
+  "cat": "Capabilities",
+  "diff": "easy",
+  "q": "We get mixed bins of items the system has never seen. Can it cope with that?",
+  "a": "Yes. Handling mixed and previously unseen items is a core strength — including high-variety environments such as spare-parts warehouses with very large SKU counts. We're always happy to discuss the practical limits for your specific scenario.",
+  "beats": [
+   "Mixed and unseen items is a core strength, including very high-SKU warehouses.",
+   "Offer to walk through the practical limits for their exact scenario."
+  ]
+ },
+ {
+  "id": 5,
+  "cat": "Capabilities",
+  "diff": "medium",
+  "q": "We run flat mailers and envelopes that sit almost flush on the belt. No way vision picks those reliably, right?",
+  "a": "Yes. Fizyr OS is built to detect challenging geometries, including very thin, flat items such as envelopes, mailers and poly bags that sit almost flush with the belt. Camera selection and field-of-view setup are tuned to give the depth and contrast needed to pick these reliably, and we validate performance on your actual items during a proof of concept.",
+  "beats": [
+   "Built for tough geometries — flush envelopes, mailers, poly bags.",
+   "Camera and field-of-view tuning give depth and contrast; validated in proof of concept."
+  ]
+ },
+ {
+  "id": 6,
+  "cat": "Capabilities",
+  "diff": "medium",
+  "q": "Won't we need a separate setup for every item type? That sounds like a maintenance nightmare.",
+  "a": "In most cases a single vision configuration handles your full mix — envelopes, poly bags, cartons and boxes — without separate logic for each type. The generalized vision model recognizes items by their characteristics rather than from a fixed catalogue, so you avoid maintaining a different setup per product. For especially demanding mixes we fine-tune to make sure every type is covered.",
+  "beats": [
+   "One configuration handles the full mix — no separate logic per item type.",
+   "Recognizes items by characteristics, not from a fixed catalogue."
+  ]
+ },
+ {
+  "id": 7,
+  "cat": "Capabilities",
+  "diff": "medium",
+  "q": "We palletize mixed cases of all different sizes. Can it build a stable pallet from that?",
+  "a": "Yes. Fizyr OS supports palletizing of mixed cases with varied sizes and packaging, providing the detection and placement data your cell needs to build stable, efficient stacks. We scope the specific rules and throughput for your products during project definition.",
+  "beats": [
+   "Supports mixed-case palletizing across varied sizes and packaging.",
+   "Provides detection and placement data for stable stacks; rules scoped in project definition."
+  ]
+ },
+ {
+  "id": 8,
+  "cat": "Capabilities",
+  "diff": "easy",
+  "q": "How do we know the robot actually picked the right thing?",
+  "a": "Yes. Alongside guiding the pick itself, Fizyr OS can support post-pick verification — for example a second 3D camera check that confirms what was picked, running in parallel so it doesn't slow your cycle. This gives your cell reliable confirmation of a successful pick, with any downstream action such as re-routing or rejecting handled by the complementary systems in the cell. We'll scope the right verification approach for your application.",
+  "beats": [
+   "Optional second 3D camera verification runs in parallel — no cycle-time hit.",
+   "Re-routing or rejecting handled by complementary cell systems."
+  ]
+ },
+ {
+  "id": 9,
+  "cat": "Capabilities",
+  "diff": "medium",
+  "q": "We need items placed in a specific orientation in the tray. Can it tell which way an item is facing?",
+  "a": "Yes. Beyond locating an item to pick, Fizyr OS can provide orientation information — such as which face is presented or how an item is aligned — so your robot can place it consistently, for example presenting items in a uniform orientation into a tray. We confirm the exact orientation outputs your application needs during scoping and validate them on your own products.",
+  "beats": [
+   "Provides orientation data — which face or alignment — for consistent placement.",
+   "Confirm exact orientation outputs in scoping; validate on their products."
+  ]
+ },
+ {
+  "id": 10,
+  "cat": "Capabilities",
+  "diff": "medium",
+  "q": "If you do need to tune it for us, how much data are we on the hook to provide?",
+  "a": "For standard use cases Fizyr OS performs out of the box with no item-specific training. Where a demanding or specialized application benefits from fine-tuning, we typically need only a modest, representative set of images of your products, which we capture during the proof of concept. We'll advise on the right amount for your case so we can reach your accuracy targets efficiently.",
+  "beats": [
+   "Standard cases need no training; tuning needs only a modest, representative image set.",
+   "Images captured during the proof of concept — the data effort is light and we guide it."
+  ]
+ },
+ {
+  "id": 11,
+  "cat": "Accuracy",
+  "diff": "easy",
+  "q": "What accuracy can you actually guarantee? We've been burned by vision before.",
+  "a": "Fizyr OS consistently meets the high accuracy levels demanding automation requires, with detection performance typically validated at 95%+ during proof of concept and 98%+ in series production, and tight control over false positives and negatives. We agree clear, measurable targets with you up front and validate against them on your application.",
+  "beats": [
+   "95% plus at proof of concept, 98% plus in series; tight false positive and negative control.",
+   "Agree measurable targets up front and validate on their application."
+  ]
+ },
+ {
+  "id": 12,
+  "cat": "Accuracy",
+  "diff": "easy",
+  "q": "Our line is fast. Won't the camera be the bottleneck?",
+  "a": "Speed is what sets Fizyr apart. Vision cycle times are typically in the 200–250 ms range, fast enough to keep high-throughput cells running without the robot waiting on the camera.",
+  "beats": [
+   "Vision cycle of 200 to 250 ms — the robot never waits on the camera.",
+   "Speed is the Fizyr differentiator — lead with it."
+  ]
+ },
+ {
+  "id": 13,
+  "cat": "Accuracy",
+  "diff": "medium",
+  "q": "What throughput can you really hit in production, not on a slide?",
+  "a": "Throughput depends on your cell design, robot and gripper, but Fizyr-powered systems routinely reach targets such as 800–1,000 picks per hour for trailer unloading and 2,000+ units per hour for depalletizing. We'll model the realistic rate for your layout during scoping.",
+  "beats": [
+   "Real targets: 800 to 1000 per hour trailer unloading, 2000 plus per hour depalletizing.",
+   "Bottleneck is usually robot and gripper, not vision; we model their real rate in scoping."
+  ]
+ },
+ {
+  "id": 14,
+  "cat": "Accuracy",
+  "diff": "medium",
+  "q": "We handle shiny sheet metal and our lighting isn't great. Doesn't that wreck vision systems?",
+  "a": "Robust detection under challenging optical conditions — including reflective sheet metal and variable warehouse lighting — is built into the vision engine and proven in live deployments. Camera and lighting selection is part of how we engineer reliability into each project.",
+  "beats": [
+   "Reflective metal and variable lighting handled — proven in live deployments.",
+   "Camera and lighting selection is how we engineer reliability in."
+  ]
+ },
+ {
+  "id": 15,
+  "cat": "Accuracy",
+  "diff": "easy",
+  "q": "Our loads are messy — leaning, edge-to-edge, slip sheets. Can it deal with real stacks?",
+  "a": "Yes. Fizyr OS handles occlusion, edge-to-edge stacking, leaning items and slip sheets, so it performs on real, imperfect loads rather than only idealized ones.",
+  "beats": [
+   "Handles occlusion, edge-to-edge stacking, leaning items and slip sheets.",
+   "Performs on real imperfect loads, not just ideal demos."
+  ]
+ },
+ {
+  "id": 16,
+  "cat": "Accuracy",
+  "diff": "easy",
+  "q": "Doesn't it slow down once there are lots of items in the scene?",
+  "a": "No. Vision cycle time stays consistent whether the scene contains one item or many, so throughput remains predictable as load density changes. This is part of what keeps Fizyr-powered cells running at high, steady rates.",
+  "beats": [
+   "Cycle time stays constant whether one item or many.",
+   "Throughput stays predictable as load density changes."
+  ]
+ },
+ {
+  "id": 17,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "How does this connect to our robot and PLC? We don't want a custom integration headache.",
+  "a": "Fizyr OS integrates through a straightforward TCP/IP API with bidirectional data exchange to your PLC, and works with all major robot brands including Fanuc, Yaskawa, KUKA and ESTUN. It's designed to drop into your existing cell architecture rather than dictate it.",
+  "beats": [
+   "TCP/IP API with bidirectional PLC exchange; Fanuc, Yaskawa, KUKA, ESTUN and all majors.",
+   "Drops into existing cell architecture — doesn't dictate it."
+  ]
+ },
+ {
+  "id": 18,
+  "cat": "Integration",
+  "diff": "easy",
+  "q": "We have our own automation platform. Can Fizyr run inside it rather than dictating our architecture?",
+  "a": "Yes. Many partners use Fizyr OS as the vision building block within their own orchestration or automation platforms. The open API makes it straightforward to embed Fizyr as the 'eyes' of a larger system.",
+  "beats": [
+   "Partners embed Fizyr as the vision building block in their own platform.",
+   "Open API — Fizyr becomes the eyes of a larger system."
+  ]
+ },
+ {
+  "id": 19,
+  "cat": "Integration",
+  "diff": "hard",
+  "q": "Does it read barcodes and give us reporting too?",
+  "a": "Fizyr OS focuses on doing one thing exceptionally well: fast, accurate vision for detection and picking. Functions such as barcode reading and reporting are typically handled by complementary systems in the cell, and we're happy to advise on how Fizyr fits alongside them.",
+  "beats": [
+   "Fizyr does one thing exceptionally: fast, accurate detection and picking.",
+   "Barcodes and reporting handled by complementary cell systems; offer to advise on the fit."
+  ],
+  "reframe": "Position barcode reading and reporting as jobs for complementary cell systems — Fizyr's value is being the fastest, most accurate eyes. Offer to advise on the fit."
+ },
+ {
+  "id": 20,
+  "cat": "Integration",
+  "diff": "easy",
+  "q": "Can it pick off a moving conveyor, or do we have to index-stop the line?",
+  "a": "Yes. Fizyr OS supports encoder-based belt tracking and conveyor synchronization, so the system can detect items on a moving belt and coordinate placement with downstream outfeed conveyors. This keeps picks and placements accurate without stopping the line.",
+  "beats": [
+   "Encoder-based belt tracking and conveyor synchronization.",
+   "Detects on a moving belt and coordinates outfeed — no line stop."
+  ]
+ },
+ {
+  "id": 21,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "We don't want to wait for hardware on site to start integrating. Is that possible?",
+  "a": "Yes. Alongside the standard robot plugins, Fizyr OS provides a mock API that lets your team build and test the integration before the cameras and full system are on site. Much of the development can run in parallel, which shortens commissioning once the hardware arrives.",
+  "beats": [
+   "A mock API lets the team build and test integration before hardware is on site.",
+   "Parallel development shortens on-site commissioning."
+  ]
+ },
+ {
+  "id": 22,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "Does it remember anything between cycles, or start from scratch each time?",
+  "a": "By default each vision cycle starts fresh and evaluates the current scene on its own, which keeps performance fast and predictable. Where your application benefits from continuity between cycles, a plugin enables predefined vision stations that retain and compare information across cycles. We'll recommend the right approach based on how your cell is laid out and what your process needs.",
+  "beats": [
+   "By default each cycle starts fresh — keeps it fast and predictable.",
+   "A plugin enables vision stations that retain and compare across cycles when useful."
+  ]
+ },
+ {
+  "id": 23,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "Do we need a separate vision system for every robot? That gets expensive fast.",
+  "a": "Often, yes. Depending on your cell layout and timing, a single Fizyr OS vision system can serve more than one robot, and a single industrial PC can support multiple cells. Where robots run on independent conveyors or very tight cycles, we'll recommend the configuration that gives each robot the data it needs while keeping the architecture as efficient as possible. We scope this with you so the design matches your throughput and footprint.",
+  "beats": [
+   "One vision system can serve multiple robots; one industrial PC can support multiple cells.",
+   "Configuration recommended per layout and timing — scoped to throughput and footprint."
+  ]
+ },
+ {
+  "id": 24,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "Our gripper has individually controlled vacuum zones. Can your software actually drive that?",
+  "a": "Yes. Fizyr OS provides grasp information that accounts for your end-of-arm tooling, including multi-zone vacuum grippers where individual suction zones are activated to suit each item. This lets your cell engage only the cups it needs for a secure pick. We align the grasp output with your specific gripper during integration.",
+  "beats": [
+   "Grasp output accounts for multi-zone vacuum tooling — engage only the cups needed.",
+   "Aligned to their specific gripper during integration."
+  ]
+ },
+ {
+  "id": 25,
+  "cat": "Integration",
+  "diff": "hard",
+  "q": "What happens when it just can't pick an item? Does the line jam?",
+  "a": "Fizyr OS continually evaluates the scene and offers the best available picks, so the cell keeps moving. If a particular item can't be picked on a given attempt, the handling logic in your cell — on the robot or PLC — manages the retry or set-aside strategy, while Fizyr keeps providing fresh detections. We'll work through the right handling approach for your process so exceptions are dealt with smoothly.",
+  "beats": [
+   "System keeps offering the best available picks — the line keeps moving.",
+   "Retry or set-aside is robot or PLC logic; Fizyr keeps feeding fresh detections."
+  ],
+  "reframe": "Don't let it sound like a failure mode. The line keeps moving; retry or set-aside is normal cell logic on the robot or PLC, and Fizyr keeps feeding fresh picks."
+ },
+ {
+  "id": 26,
+  "cat": "Integration",
+  "diff": "hard",
+  "q": "We need to pick a specific item from a mixed bin using our WMS data. Can it identify which one?",
+  "a": "Fizyr OS specializes in fast, accurate detection and picking, and works hand in hand with the identification systems in your cell. Where you need to select a specific item from a mix, identification is typically handled in partnership with your WMS and barcode or labeling systems, with Fizyr providing the precise detection and grasp. We're glad to advise on how Fizyr fits alongside your warehouse systems to deliver the outcome you need.",
+  "beats": [
+   "Fizyr provides detection and grasp; specific-SKU identification done with their WMS and barcode systems.",
+   "Frame as working hand in hand with their identification systems — not a gap."
+  ],
+  "reframe": "Identification of a specific SKU is not a Fizyr gap to apologise for — it's a shared job. Frame Fizyr as detection and grasp working hand in hand with their WMS and barcode or labeling systems."
+ },
+ {
+  "id": 27,
+  "cat": "Pricing",
+  "diff": "easy",
+  "q": "How is this priced? Give me the model.",
+  "a": "We offer clear, all-in licensing that scales with your deployment — from a single cell to fleets across multiple sites — so the unit economics improve as you roll out. We'll put together pricing tailored to your number of cells and use case.",
+  "beats": [
+   "Clear all-in licensing that scales from a single cell to multi-site fleets.",
+   "Unit economics improve as they roll out; tailored to cell count and use case."
+  ]
+ },
+ {
+  "id": 28,
+  "cat": "Pricing",
+  "diff": "hard",
+  "q": "Honestly, why pay for Fizyr when a cheaper off-the-shelf vision could do it?",
+  "a": "Fizyr delivers the speed, accuracy and adaptability that off-the-shelf vision often can't, which is what makes demanding automation viable and keeps it running in production. For high-variety, high-throughput handling, that capability is where the return on investment comes from.",
+  "beats": [
+   "Off-the-shelf vision can't match the speed, accuracy and adaptability demanding automation needs.",
+   "Return on investment comes from keeping high-variety, high-throughput handling running."
+  ],
+  "reframe": "Don't compete on sticker price. Anchor on what off-the-shelf vision can't do — speed, accuracy, adaptability — and tie it to keeping high-variety, high-throughput production running."
+ },
+ {
+  "id": 29,
+  "cat": "Pricing",
+  "diff": "easy",
+  "q": "Can you give us a ballpark number now for budgeting?",
+  "a": "Absolutely. Tell us a little about your application and cell count and we can provide an indicative budget number to support your planning, ahead of a detailed quote.",
+  "beats": [
+   "Yes — an indicative budget number from application and cell count.",
+   "Positions a detailed quote as the next step."
+  ]
+ },
+ {
+  "id": 30,
+  "cat": "Pricing",
+  "diff": "medium",
+  "q": "Is installation included in the license, or is that another line item?",
+  "a": "Installation and commissioning are a normal part of bringing any vision-guided cell into production, and we set them out clearly in your proposal so there are no surprises. We'll walk you through what's covered by licensing versus deployment so you can plan the full picture with confidence.",
+  "beats": [
+   "Installation and commissioning are normal for any vision cell; set out clearly in the proposal.",
+   "Walk them through licensing versus deployment — no surprises."
+  ]
+ },
+ {
+  "id": 31,
+  "cat": "Pricing",
+  "diff": "hard",
+  "q": "Is the proof of concept free, or are we paying for that too?",
+  "a": "A proof of concept is a focused, valuable step that lets you see performance on your own products before you commit, and we set out clearly what it includes and how it's priced in your proposal. We keep it efficient and tied to clear, measurable targets, so you gain a confident basis for your decision. Tell us about your application and we'll outline the right evaluation approach.",
+  "beats": [
+   "Proof of concept is a focused de-risking step; see performance on their products first.",
+   "Scope and price stated clearly; tied to measurable targets — don't promise free."
+  ],
+  "reframe": "Don't promise a free proof of concept. Sell it as a focused, valuable de-risking step tied to measurable targets, with scope and price stated clearly in the proposal."
+ },
+ {
+  "id": 32,
+  "cat": "Deployment",
+  "diff": "easy",
+  "q": "Is this cloud-based? We can't have the line stop if our internet drops.",
+  "a": "Fizyr OS runs on the edge, on-premise, so your operation isn't dependent on an internet connection to keep moving. Secure remote diagnostics are available with your permission to speed up support.",
+  "beats": [
+   "Runs on the edge, on-premise — no internet dependency to keep moving.",
+   "Secure remote diagnostics available with permission."
+  ]
+ },
+ {
+  "id": 33,
+  "cat": "Deployment",
+  "diff": "easy",
+  "q": "What support do we get, and can you handle a rollout across several sites?",
+  "a": "We support customers and integrators through deployment and into production, including multi-site rollouts, with clear procedures for commissioning, tuning and ongoing assistance.",
+  "beats": [
+   "Support through deployment into production, including multi-site rollouts.",
+   "Clear procedures for commissioning, tuning and ongoing assistance."
+  ]
+ },
+ {
+  "id": 34,
+  "cat": "Deployment",
+  "diff": "medium",
+  "q": "If something breaks at 2am in production, then what?",
+  "a": "Fizyr OS is built for reliable, continuous operation, with defined restart and recovery procedures and clear escalation paths so your team knows exactly what to do and downtime stays minimal.",
+  "beats": [
+   "Built for continuous operation: defined restart and recovery procedures plus escalation paths.",
+   "Team knows exactly what to do; downtime stays minimal."
+  ]
+ },
+ {
+  "id": 35,
+  "cat": "Deployment",
+  "diff": "easy",
+  "q": "Can we limit the camera to just the robot's working area? We don't want it seeing the whole cell.",
+  "a": "Yes. You can define a volume of interest that limits the camera's field of view to the robot's working zone, so the system focuses only on the area that matters. This is a standard part of configuration and helps keep detection fast and relevant to your cell.",
+  "beats": [
+   "Define a volume of interest limiting the field of view to the working zone.",
+   "Standard configuration; keeps detection fast and relevant."
+  ]
+ },
+ {
+  "id": 36,
+  "cat": "Deployment",
+  "diff": "medium",
+  "q": "Our packaging changes constantly. How fast can the system keep up?",
+  "a": "Quickly. Because Fizyr OS generalizes across items, most product or packaging changes are handled with no rework at all. Where a demanding new variant does call for tuning, we have a clear, efficient process to adapt the system and validate it against your targets, planned around your production schedule.",
+  "beats": [
+   "Generalizes across items — most packaging changes need no rework.",
+   "Demanding new variants: clear, efficient tuning and validation around their schedule."
+  ]
+ },
+ {
+  "id": 37,
+  "cat": "Hardware",
+  "diff": "easy",
+  "q": "Are we locked into one camera brand?",
+  "a": "Fizyr OS is camera-agnostic and supports leading 3D and industrial cameras including Zivid, Photoneo, Ensenso and Basler. We help you select the right camera for your accuracy, field-of-view, cost and lead-time requirements as part of project scoping.",
+  "beats": [
+   "Camera-agnostic — Zivid, Photoneo, Ensenso, Basler.",
+   "We help pick the right camera for accuracy, field of view, cost and lead time."
+  ]
+ },
+ {
+  "id": 38,
+  "cat": "Hardware",
+  "diff": "easy",
+  "q": "What hardware do we need to run this? Some special server?",
+  "a": "Fizyr OS runs on a standard GPU-equipped industrial PC, and a single IPC can often serve more than one cell. We'll specify the right hardware for your throughput and number of cells.",
+  "beats": [
+   "Standard GPU industrial PC; one IPC often serves more than one cell.",
+   "We specify hardware to their throughput and cell count."
+  ]
+ },
+ {
+  "id": 39,
+  "cat": "Hardware",
+  "diff": "easy",
+  "q": "Will this need special power or networking in our cell?",
+  "a": "Fizyr OS works with common industrial standards, including 24V DC environments and PoE-connected cameras, so it slots into typical cell infrastructure without special requirements.",
+  "beats": [
+   "Common industrial standards — 24V DC, PoE cameras.",
+   "Slots into typical cell infrastructure — no special requirements."
+  ]
+ },
+ {
+  "id": 40,
+  "cat": "Hardware",
+  "diff": "easy",
+  "q": "Does our conveyor surface matter for detection?",
+  "a": "It can. Good contrast between your items and the belt helps the vision system perform at its best, so for difficult cases we recommend surfaces such as a matte, light-absorbing finish. We include belt and lighting guidance as part of scoping so the cell is set up for reliable detection from day one.",
+  "beats": [
+   "Contrast helps — for hard cases recommend a matte, light-absorbing surface.",
+   "Belt and lighting guidance included in scoping."
+  ]
+ },
+ {
+  "id": 41,
+  "cat": "Hardware",
+  "diff": "hard",
+  "q": "Another vendor quoted a top-end 3D camera. Do we really need to pay for that?",
+  "a": "Not always premium. Because Fizyr OS is camera-agnostic, we match the camera to what your application actually requires — in many cases a mid-range 3D camera is more than enough for reliable picking, and some scenes, such as orientation or packing checks, can be handled with 2D. We help you choose the right balance of accuracy, field of view, cost and lead time, so you're not paying for more camera than your application needs.",
+  "beats": [
+   "Camera-agnostic — match to the real need; mid-range 3D often plenty, 2D for some scenes.",
+   "Don't pay for more camera than the application needs; don't name competitors."
+  ],
+  "reframe": "Don't validate a competitor's premium-camera quote. Match the camera to the actual need — mid-range 3D is often plenty, 2D for some scenes. Avoid naming competitors."
+ }
+];
+
+const CATS = ["All","Capabilities","Accuracy","Integration","Pricing","Deployment","Hardware"];
+let filter="All", deck=[], current=null, score=0, streak=0, scoredIds=new Set();
+let timerInt=null, timerToggle=false;
+
+const $=id=>document.getElementById(id);
+const flip=$('flip'), front=$('front');
+
+/* ---------- evaluation engine (keyword beat-matching) ---------- */
+const STOP=new Set("the a an and or of to for in on with your you our we it is are be by as at that this these those them their into only can not no yes do does so up out off over most more than each every one two real just keep keeps stay stays need needs right lead close offer frame anchor walk position dont don't concede them about across when where what how why give us them they're its which from has have plus per".split(" "));
+const KEEP=new Set(["ms","2d","3d","poc","wms","roi","api","plc","poe","ip","os","24v","cup","cups"]);
+function norm(s){return (s||"").toLowerCase()
+  .replace(/&/g," and ")
+  .replace(/on[\s-]?prem(ise|ises)?/g," onpremise edge ")
+  .replace(/millisecond[s]?/g," ms ")
+  .replace(/proof[\s-]?of[\s-]?concept/g," poc proofofconcept ")
+  .replace(/field[\s-]?of[\s-]?view/g," fieldofview fov ")
+  .replace(/[^a-z0-9%]+/g," ");}
+function keywords(beat){
+  const seen=new Set(), out=[];
+  norm(beat).split(" ").forEach(w=>{
+    if(!w||STOP.has(w)) return;
+    const keepIt = w.length>=4 || /\d/.test(w) || KEEP.has(w) || /%/.test(w);
+    if(keepIt && !seen.has(w)){seen.add(w); out.push(w);}
+  });
+  return out;
+}
+function evaluate(card, answer){
+  const tWords=new Set(norm(answer).split(" ").filter(Boolean));
+  const results=card.beats.map(b=>{
+    const kw=keywords(b);
+    const matched=kw.filter(k=>tWords.has(k) || (k.length>5 && [...tWords].some(t=>t.includes(k)||k.includes(t))));
+    const hasNumber=kw.some(k=>/\d/.test(k));
+    const numberHit=matched.some(k=>/\d/.test(k));
+    const ratio=kw.length?matched.length/kw.length:0;
+    const hit = matched.length>=2 || (matched.length>=1 && kw.length<=2) || (hasNumber&&numberHit) || ratio>=0.5;
+    return {beat:b, matched, hit};
+  });
+  const hits=results.filter(r=>r.hit).length;
+  const pct=Math.round(hits/card.beats.length*100);
+  return {results, hits, total:card.beats.length, pct, empty:tWords.size===0};
+}
+
+/* ---------- UI ---------- */
+const fwrap=$('filters');
+CATS.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='chip'+(c==='All'?' active':''); b.textContent=c==='All'?'All · 41':c;
+  b.onclick=()=>{filter=c; document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); buildDeck(); flash(c==='All'?'Full deck loaded':c+' deck loaded');};
+  fwrap.appendChild(b);
+});
+function pool(){return filter==='All'?CARDS:CARDS.filter(c=>c.cat===filter);}
+function buildDeck(){deck=shuffle(pool().map(c=>c.id)); updateDrawn();}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+function updateDrawn(){const total=pool().length; $('sDrawn').textContent=(total-deck.length)+'/'+total;}
+
+function spin(){
+  if(flip.classList.contains('flipped'))flip.classList.remove('flipped');
+  if(deck.length===0){buildDeck(); flash('Deck reshuffled — '+pool().length+' cards');}
+  stopRec(); $('transcript').value=''; $('capStatus').textContent='Click to speak — or just type below.';
+  $('emptyState').style.display='none'; $('frontContent').style.display='flex';
+  front.classList.add('spinning'); stopTimer();
+  let ticks=0; const maxT=14+(Math.random()*6|0);
+  clearInterval(window._roll);
+  window._roll=setInterval(()=>{
+    const peek=pool()[Math.random()*pool().length|0];
+    $('fObjection').innerHTML='<span class="quote-mark">“</span>'+peek.q+'<span class="quote-mark">”</span>';
+    $('fCat').textContent=peek.cat; $('fDiff').textContent=peek.diff; $('fDiff').className='diff '+peek.diff;
+    if(++ticks>=maxT){clearInterval(window._roll); land();}
+  },70);
+}
+function land(){
+  current=CARDS.find(c=>c.id===deck.pop());
+  front.classList.remove('spinning'); renderFront(current); updateDrawn();
+}
+function renderFront(c){
+  $('fCat').textContent=c.cat; $('fDiff').textContent=c.diff; $('fDiff').className='diff '+c.diff;
+  $('fNum').textContent='Card #'+c.id+' of 41';
+  $('fObjection').innerHTML='<span class="quote-mark">“</span>'+c.q+'<span class="quote-mark">”</span>';
+  if(timerToggle) startTimer();
+}
+
+function reveal(){
+  if(!current) return;
+  stopRec(); stopTimer();
+  const ev=evaluate(current, $('transcript').value);
+  $('bCat').textContent=current.cat; $('bDiff').textContent=current.diff; $('bDiff').className='diff '+current.diff;
+  $('bNum').textContent='Card #'+current.id+' of 41';
+  // ring
+  $('ring').style.setProperty('--p', ev.pct);
+  $('ringPct').textContent=ev.pct+'%';
+  // summary
+  let grade, gcls;
+  if(ev.empty){grade='No answer captured'; gcls='g-weak';}
+  else if(ev.pct>=80){grade='Strong coverage'; gcls='g-strong';}
+  else if(ev.pct>=50){grade='Partial coverage'; gcls='g-ok';}
+  else {grade='Thin coverage'; gcls='g-weak';}
+  let sum='Covered <b>'+ev.hits+' of '+ev.total+'</b> key beats.';
+  if(current.reframe) sum+=' This is a <b>⚑ reframe</b> card — check the answer turned the gap into a strength.';
+  $('evalSummary').innerHTML=sum+'<br><span class="gradeTag '+gcls+'">'+grade+'</span>';
+  // beats checklist
+  const ul=$('bBeats'); ul.innerHTML='';
+  ev.results.forEach(r=>{
+    const li=document.createElement('li');
+    const mark='<span class="bmark '+(r.hit?'hit':'miss')+'">'+(r.hit?'✓':'✕')+'</span>';
+    let matchedHtml='';
+    if(r.hit && r.matched.length) matchedHtml='<span class="bmatched">matched: <span>'+r.matched.slice(0,6).join(', ')+'</span></span>';
+    else if(!r.hit) matchedHtml='<span class="bmatched">not detected in the answer</span>';
+    li.innerHTML=mark+'<div><span class="btext'+(r.hit?'':' miss')+'">'+r.beat+'</span>'+matchedHtml+'</div>';
+    ul.appendChild(li);
+  });
+  // transcript
+  const tv=$('transcript').value.trim();
+  $('trText').textContent=tv||'(nothing captured)';
+  // model answer
+  $('bAnswer').textContent=current.a;
+  if(current.reframe){$('bReframe').style.display='flex'; $('bReframeTxt').textContent=current.reframe;}
+  else $('bReframe').style.display='none';
+  $('back').scrollTop=0;
+  flip.classList.add('flipped');
+}
+
+function scoreIt(pts){
+  if(!current) return;
+  if(!scoredIds.has(current.id)){
+    scoredIds.add(current.id);
+    score+=pts; $('sScore').textContent=score;
+    streak = pts>=1 ? streak+1 : 0; $('sStreak').textContent=streak;
+  }
+  flash(pts===2?'Nailed it! 🟢':pts===1?'Got there 🟡':'Note it for next time');
+  setTimeout(spin,520);
+}
+
+/* ---------- speech recognition ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null, recOn=false, baseText="";
+if(SR){
+  rec=new SR(); rec.continuous=true; rec.interimResults=true; rec.lang='en-GB';
+  rec.onresult=e=>{
+    let interim='', finalAdd='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const t=e.results[i][0].transcript;
+      if(e.results[i].isFinal) finalAdd+=t+' '; else interim+=t;
+    }
+    if(finalAdd) baseText=(baseText+' '+finalAdd).replace(/\s+/g,' ').trim();
+    $('transcript').value=(baseText+(interim?' '+interim:'')).trim();
+  };
+  rec.onerror=ev=>{$('capStatus').textContent='Mic error: '+ev.error+' — you can type instead.'; setMic(false);};
+  rec.onend=()=>{ if(recOn){try{rec.start();}catch(e){}} };
+}else{
+  $('micBtn').style.display='none';
+  $('capStatus').textContent='Voice capture not supported in this browser — type your answer (best in Chrome/Edge).';
+  $('speechNote').textContent='';
+}
+function setMic(on){
+  recOn=on; const b=$('micBtn');
+  if(on){b.classList.add('live'); $('micLabel').textContent='Stop'; $('capStatus').textContent='Listening… speak your answer.';}
+  else{b.classList.remove('live'); $('micLabel').textContent='Record answer';}
+}
+function startRec(){ if(!rec) return; baseText=$('transcript').value.trim(); try{rec.start(); setMic(true);}catch(e){} }
+function stopRec(){ if(!rec) return; recOn=false; try{rec.stop();}catch(e){} setMic(false); if($('capStatus').textContent.startsWith('Listening')) $('capStatus').textContent='Captured. Edit if needed, then score.'; }
+$('micBtn').onclick=()=> recOn?stopRec():startRec();
+
+/* ---------- timer ---------- */
+function startTimer(){
+  let t=45; const fill=$('timefill'), txt=$('timetext'); $('timerWrap').style.display='flex';
+  fill.className='timefill'; fill.style.width='100%'; txt.textContent='0:45';
+  clearInterval(timerInt);
+  timerInt=setInterval(()=>{
+    t--; fill.style.width=Math.max(0,t/45*100)+'%';
+    txt.textContent='0:'+(t<10?'0':'')+Math.max(t,0);
+    if(t<=15&&t>7)fill.className='timefill warn';
+    if(t<=7)fill.className='timefill over';
+    if(t<=0){clearInterval(timerInt); txt.textContent='Time!';}
+  },1000);
+}
+function stopTimer(){clearInterval(timerInt); if(!timerToggle)$('timerWrap').style.display='none';}
+$('timerToggle').onchange=e=>{timerToggle=e.target.checked; if(!timerToggle){stopTimer();$('timerWrap').style.display='none';}};
+
+$('spinBtn').onclick=spin; $('spinBtn2').onclick=spin; $('revealBtn').onclick=reveal;
+document.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>scoreIt(+b.dataset.pts));
+
+let toastT;
+function flash(msg){const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1500);}
+
+buildDeck();
+</script>
+</body>
+</html>
