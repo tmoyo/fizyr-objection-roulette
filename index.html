@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fizyr OS — Objection Roulette</title>
+<title>Fizyr OS, Objection Roulette</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -145,7 +145,7 @@
       <div class="face front" id="front">
         <div class="empty" id="emptyState">
           <div class="big">🎯</div>
-          <p>Pick a category (or leave it on <b>All</b>) and hit <b>Spin</b>. A random customer objection lands — <b>speak your answer</b> (the mic transcribes it live) or type it, then hit <b>Score &amp; reveal</b> to see how well you covered the key beats against the model answer.</p>
+          <p>Pick a category (or leave it on <b>All</b>) and hit <b>Spin</b>. A random customer objection lands, <b>speak your answer</b> (the mic transcribes it live) or type it, then hit <b>Score &amp; reveal</b> to see how well you covered the key beats against the model answer.</p>
         </div>
         <div id="frontContent" style="display:none; flex:1; flex-direction:column;">
           <div class="meta">
@@ -159,7 +159,7 @@
           <div class="capture" id="capture">
             <div class="capRow">
               <button class="mic" id="micBtn">🎤 <span id="micLabel">Record answer</span></button>
-              <span class="capStatus" id="capStatus">Click to speak — or just type below.</span>
+              <span class="capStatus" id="capStatus">Click to speak, or just type below.</span>
             </div>
             <textarea class="transcript" id="transcript" placeholder="Your spoken answer appears here. You can edit it before scoring."></textarea>
           </div>
@@ -189,7 +189,7 @@
         </div>
 
         <div class="beatChecklist">
-          <h3 style="margin-top:18px;">Key beats — did the answer land them?</h3>
+          <h3 style="margin-top:18px;">Key beats, did the answer land them?</h3>
           <ul id="bBeats"></ul>
         </div>
 
@@ -200,7 +200,7 @@
           <div class="answer" id="bAnswer"></div>
           <div class="reframe-flag" id="bReframe" style="display:none;">
             <span class="ico">⚑</span>
-            <span class="txt"><b>Reframe — don't concede the gap.</b> <span id="bReframeTxt"></span></span>
+            <span class="txt"><b>Reframe, don't concede the gap.</b> <span id="bReframeTxt"></span></span>
           </div>
         </div>
 
@@ -224,7 +224,7 @@
 
   <footer>
     41 objections from the live Fizyr OS customer FAQ. Voice transcription uses your browser's built-in speech engine
-    (works in Google Chrome; type your answer in other browsers). Auto-scoring is keyword-based — a coaching aid, not a verdict; the human grade is final.
+    (works in Google Chrome; type your answer in other browsers). Auto-scoring is keyword-based, a coaching aid, not a verdict; the human grade is final.
     Weight scoring toward the <b>⚑ reframe</b> on flagged cards.
   </footer>
 
@@ -247,10 +247,10 @@ const CARDS = [
   "id": 2,
   "cat": "Capabilities",
   "diff": "medium",
-  "q": "Our products are unusual — crushed cartons, poly bags, odd shapes. Will it really handle our mix?",
-  "a": "In most cases, yes. Our neural networks are designed to generalize across enormous variety — poly bags, crushed or damaged cartons, hinged and irregular items, loose components, food packaging, dishware, and reflective parts all fall within scope. For new applications we validate against your real product mix during a proof of concept so you can see performance on your items before committing.",
+  "q": "Our products are unusual, crushed cartons, poly bags, odd shapes. Will it really handle our mix?",
+  "a": "In most cases, yes. Our neural networks are designed to generalize across enormous variety, poly bags, crushed or damaged cartons, hinged and irregular items, loose components, food packaging, dishware, and reflective parts all fall within scope. For new applications we validate against your real product mix during a proof of concept so you can see performance on your items before committing.",
   "beats": [
-   "Neural networks generalize across huge variety — bags, crushed cartons, food, reflective parts.",
+   "Neural networks generalize across huge variety, bags, crushed cartons, food, reflective parts.",
    "Close on: we prove it on your product mix in a proof of concept before you commit."
   ]
  },
@@ -261,7 +261,7 @@ const CARDS = [
   "q": "Don't we have to train it on every single SKU before it works?",
   "a": "No. Fizyr OS uses a generalized vision model that detects and picks items it has never seen before, so you don't need to maintain a catalogue of every SKU. For standard use cases it works out of the box, and performance can be further tuned for demanding or specialized applications.",
   "beats": [
-   "No SKU catalogue — generalized model picks items it has never seen.",
+   "No SKU catalogue, generalized model picks items it has never seen.",
    "Works out of the box; tuning is optional, only for demanding cases."
   ]
  },
@@ -270,7 +270,7 @@ const CARDS = [
   "cat": "Capabilities",
   "diff": "easy",
   "q": "We get mixed bins of items the system has never seen. Can it cope with that?",
-  "a": "Yes. Handling mixed and previously unseen items is a core strength — including high-variety environments such as spare-parts warehouses with very large SKU counts. We're always happy to discuss the practical limits for your specific scenario.",
+  "a": "Yes. Handling mixed and previously unseen items is a core strength, including high-variety environments such as spare-parts warehouses with very large SKU counts. We're always happy to discuss the practical limits for your specific scenario.",
   "beats": [
    "Mixed and unseen items is a core strength, including very high-SKU warehouses.",
    "Offer to walk through the practical limits for their exact scenario."
@@ -283,7 +283,7 @@ const CARDS = [
   "q": "We run flat mailers and envelopes that sit almost flush on the belt. No way vision picks those reliably, right?",
   "a": "Yes. Fizyr OS is built to detect challenging geometries, including very thin, flat items such as envelopes, mailers and poly bags that sit almost flush with the belt. Camera selection and field-of-view setup are tuned to give the depth and contrast needed to pick these reliably, and we validate performance on your actual items during a proof of concept.",
   "beats": [
-   "Built for tough geometries — flush envelopes, mailers, poly bags.",
+   "Built for tough geometries, flush envelopes, mailers, poly bags.",
    "Camera and field-of-view tuning give depth and contrast; validated in proof of concept."
   ]
  },
@@ -292,9 +292,9 @@ const CARDS = [
   "cat": "Capabilities",
   "diff": "medium",
   "q": "Won't we need a separate setup for every item type? That sounds like a maintenance nightmare.",
-  "a": "In most cases a single vision configuration handles your full mix — envelopes, poly bags, cartons and boxes — without separate logic for each type. The generalized vision model recognizes items by their characteristics rather than from a fixed catalogue, so you avoid maintaining a different setup per product. For especially demanding mixes we fine-tune to make sure every type is covered.",
+  "a": "In most cases a single vision configuration handles your full mix, envelopes, poly bags, cartons and boxes, without separate logic for each type. The generalized vision model recognizes items by their characteristics rather than from a fixed catalogue, so you avoid maintaining a different setup per product. For especially demanding mixes we fine-tune to make sure every type is covered.",
   "beats": [
-   "One configuration handles the full mix — no separate logic per item type.",
+   "One configuration handles the full mix, no separate logic per item type.",
    "Recognizes items by characteristics, not from a fixed catalogue."
   ]
  },
@@ -314,9 +314,9 @@ const CARDS = [
   "cat": "Capabilities",
   "diff": "easy",
   "q": "How do we know the robot actually picked the right thing?",
-  "a": "Yes. Alongside guiding the pick itself, Fizyr OS can support post-pick verification — for example a second 3D camera check that confirms what was picked, running in parallel so it doesn't slow your cycle. This gives your cell reliable confirmation of a successful pick, with any downstream action such as re-routing or rejecting handled by the complementary systems in the cell. We'll scope the right verification approach for your application.",
+  "a": "Yes. Alongside guiding the pick itself, Fizyr OS can support post-pick verification, for example a second 3D camera check that confirms what was picked, running in parallel so it doesn't slow your cycle. This gives your cell reliable confirmation of a successful pick, with any downstream action such as re-routing or rejecting handled by the complementary systems in the cell. We'll scope the right verification approach for your application.",
   "beats": [
-   "Optional second 3D camera verification runs in parallel — no cycle-time hit.",
+   "Optional second 3D camera verification runs in parallel, no cycle-time hit.",
    "Re-routing or rejecting handled by complementary cell systems."
   ]
  },
@@ -325,9 +325,9 @@ const CARDS = [
   "cat": "Capabilities",
   "diff": "medium",
   "q": "We need items placed in a specific orientation in the tray. Can it tell which way an item is facing?",
-  "a": "Yes. Beyond locating an item to pick, Fizyr OS can provide orientation information — such as which face is presented or how an item is aligned — so your robot can place it consistently, for example presenting items in a uniform orientation into a tray. We confirm the exact orientation outputs your application needs during scoping and validate them on your own products.",
+  "a": "Yes. Beyond locating an item to pick, Fizyr OS can provide orientation information, such as which face is presented or how an item is aligned, so your robot can place it consistently, for example presenting items in a uniform orientation into a tray. We confirm the exact orientation outputs your application needs during scoping and validate them on your own products.",
   "beats": [
-   "Provides orientation data — which face or alignment — for consistent placement.",
+   "Provides orientation data, which face or alignment, for consistent placement.",
    "Confirm exact orientation outputs in scoping; validate on their products."
   ]
  },
@@ -339,7 +339,7 @@ const CARDS = [
   "a": "For standard use cases Fizyr OS performs out of the box with no item-specific training. Where a demanding or specialized application benefits from fine-tuning, we typically need only a modest, representative set of images of your products, which we capture during the proof of concept. We'll advise on the right amount for your case so we can reach your accuracy targets efficiently.",
   "beats": [
    "Standard cases need no training; tuning needs only a modest, representative image set.",
-   "Images captured during the proof of concept — the data effort is light and we guide it."
+   "Images captured during the proof of concept, the data effort is light and we guide it."
   ]
  },
  {
@@ -360,8 +360,8 @@ const CARDS = [
   "q": "Our line is fast. Won't the camera be the bottleneck?",
   "a": "Speed is what sets Fizyr apart. Vision cycle times are typically in the 200–250 ms range, fast enough to keep high-throughput cells running without the robot waiting on the camera.",
   "beats": [
-   "Vision cycle of 200 to 250 ms — the robot never waits on the camera.",
-   "Speed is the Fizyr differentiator — lead with it."
+   "Vision cycle of 200 to 250 ms, the robot never waits on the camera.",
+   "Speed is the Fizyr differentiator, lead with it."
   ]
  },
  {
@@ -380,9 +380,9 @@ const CARDS = [
   "cat": "Accuracy",
   "diff": "medium",
   "q": "We handle shiny sheet metal and our lighting isn't great. Doesn't that wreck vision systems?",
-  "a": "Robust detection under challenging optical conditions — including reflective sheet metal and variable warehouse lighting — is built into the vision engine and proven in live deployments. Camera and lighting selection is part of how we engineer reliability into each project.",
+  "a": "Robust detection under challenging optical conditions, including reflective sheet metal and variable warehouse lighting, is built into the vision engine and proven in live deployments. Camera and lighting selection is part of how we engineer reliability into each project.",
   "beats": [
-   "Reflective metal and variable lighting handled — proven in live deployments.",
+   "Reflective metal and variable lighting handled, proven in live deployments.",
    "Camera and lighting selection is how we engineer reliability in."
   ]
  },
@@ -390,7 +390,7 @@ const CARDS = [
   "id": 15,
   "cat": "Accuracy",
   "diff": "easy",
-  "q": "Our loads are messy — leaning, edge-to-edge, slip sheets. Can it deal with real stacks?",
+  "q": "Our loads are messy, leaning, edge-to-edge, slip sheets. Can it deal with real stacks?",
   "a": "Yes. Fizyr OS handles occlusion, edge-to-edge stacking, leaning items and slip sheets, so it performs on real, imperfect loads rather than only idealized ones.",
   "beats": [
    "Handles occlusion, edge-to-edge stacking, leaning items and slip sheets.",
@@ -416,7 +416,7 @@ const CARDS = [
   "a": "Fizyr OS integrates through a straightforward TCP/IP API with bidirectional data exchange to your PLC, and works with all major robot brands including Fanuc, Yaskawa, KUKA and ESTUN. It's designed to drop into your existing cell architecture rather than dictate it.",
   "beats": [
    "TCP/IP API with bidirectional PLC exchange; Fanuc, Yaskawa, KUKA, ESTUN and all majors.",
-   "Drops into existing cell architecture — doesn't dictate it."
+   "Drops into existing cell architecture, doesn't dictate it."
   ]
  },
  {
@@ -427,7 +427,7 @@ const CARDS = [
   "a": "Yes. Many partners use Fizyr OS as the vision building block within their own orchestration or automation platforms. The open API makes it straightforward to embed Fizyr as the 'eyes' of a larger system.",
   "beats": [
    "Partners embed Fizyr as the vision building block in their own platform.",
-   "Open API — Fizyr becomes the eyes of a larger system."
+   "Open API, Fizyr becomes the eyes of a larger system."
   ]
  },
  {
@@ -440,7 +440,7 @@ const CARDS = [
    "Fizyr does one thing exceptionally: fast, accurate detection and picking.",
    "Barcodes and reporting handled by complementary cell systems; offer to advise on the fit."
   ],
-  "reframe": "Position barcode reading and reporting as jobs for complementary cell systems — Fizyr's value is being the fastest, most accurate eyes. Offer to advise on the fit."
+  "reframe": "Position barcode reading and reporting as jobs for complementary cell systems, Fizyr's value is being the fastest, most accurate eyes. Offer to advise on the fit."
  },
  {
   "id": 20,
@@ -450,7 +450,7 @@ const CARDS = [
   "a": "Yes. Fizyr OS supports encoder-based belt tracking and conveyor synchronization, so the system can detect items on a moving belt and coordinate placement with downstream outfeed conveyors. This keeps picks and placements accurate without stopping the line.",
   "beats": [
    "Encoder-based belt tracking and conveyor synchronization.",
-   "Detects on a moving belt and coordinates outfeed — no line stop."
+   "Detects on a moving belt and coordinates outfeed, no line stop."
   ]
  },
  {
@@ -471,7 +471,7 @@ const CARDS = [
   "q": "Does it remember anything between cycles, or start from scratch each time?",
   "a": "By default each vision cycle starts fresh and evaluates the current scene on its own, which keeps performance fast and predictable. Where your application benefits from continuity between cycles, a plugin enables predefined vision stations that retain and compare information across cycles. We'll recommend the right approach based on how your cell is laid out and what your process needs.",
   "beats": [
-   "By default each cycle starts fresh — keeps it fast and predictable.",
+   "By default each cycle starts fresh, keeps it fast and predictable.",
    "A plugin enables vision stations that retain and compare across cycles when useful."
   ]
  },
@@ -483,7 +483,7 @@ const CARDS = [
   "a": "Often, yes. Depending on your cell layout and timing, a single Fizyr OS vision system can serve more than one robot, and a single industrial PC can support multiple cells. Where robots run on independent conveyors or very tight cycles, we'll recommend the configuration that gives each robot the data it needs while keeping the architecture as efficient as possible. We scope this with you so the design matches your throughput and footprint.",
   "beats": [
    "One vision system can serve multiple robots; one industrial PC can support multiple cells.",
-   "Configuration recommended per layout and timing — scoped to throughput and footprint."
+   "Configuration recommended per layout and timing, scoped to throughput and footprint."
   ]
  },
  {
@@ -493,7 +493,7 @@ const CARDS = [
   "q": "Our gripper has individually controlled vacuum zones. Can your software actually drive that?",
   "a": "Yes. Fizyr OS provides grasp information that accounts for your end-of-arm tooling, including multi-zone vacuum grippers where individual suction zones are activated to suit each item. This lets your cell engage only the cups it needs for a secure pick. We align the grasp output with your specific gripper during integration.",
   "beats": [
-   "Grasp output accounts for multi-zone vacuum tooling — engage only the cups needed.",
+   "Grasp output accounts for multi-zone vacuum tooling, engage only the cups needed.",
    "Aligned to their specific gripper during integration."
   ]
  },
@@ -502,9 +502,9 @@ const CARDS = [
   "cat": "Integration",
   "diff": "hard",
   "q": "What happens when it just can't pick an item? Does the line jam?",
-  "a": "Fizyr OS continually evaluates the scene and offers the best available picks, so the cell keeps moving. If a particular item can't be picked on a given attempt, the handling logic in your cell — on the robot or PLC — manages the retry or set-aside strategy, while Fizyr keeps providing fresh detections. We'll work through the right handling approach for your process so exceptions are dealt with smoothly.",
+  "a": "Fizyr OS continually evaluates the scene and offers the best available picks, so the cell keeps moving. If a particular item can't be picked on a given attempt, the handling logic in your cell, on the robot or PLC, manages the retry or set-aside strategy, while Fizyr keeps providing fresh detections. We'll work through the right handling approach for your process so exceptions are dealt with smoothly.",
   "beats": [
-   "System keeps offering the best available picks — the line keeps moving.",
+   "System keeps offering the best available picks, the line keeps moving.",
    "Retry or set-aside is robot or PLC logic; Fizyr keeps feeding fresh detections."
   ],
   "reframe": "Don't let it sound like a failure mode. The line keeps moving; retry or set-aside is normal cell logic on the robot or PLC, and Fizyr keeps feeding fresh picks."
@@ -517,16 +517,16 @@ const CARDS = [
   "a": "Fizyr OS specializes in fast, accurate detection and picking, and works hand in hand with the identification systems in your cell. Where you need to select a specific item from a mix, identification is typically handled in partnership with your WMS and barcode or labeling systems, with Fizyr providing the precise detection and grasp. We're glad to advise on how Fizyr fits alongside your warehouse systems to deliver the outcome you need.",
   "beats": [
    "Fizyr provides detection and grasp; specific-SKU identification done with their WMS and barcode systems.",
-   "Frame as working hand in hand with their identification systems — not a gap."
+   "Frame as working hand in hand with their identification systems, not a gap."
   ],
-  "reframe": "Identification of a specific SKU is not a Fizyr gap to apologise for — it's a shared job. Frame Fizyr as detection and grasp working hand in hand with their WMS and barcode or labeling systems."
+  "reframe": "Identification of a specific SKU is not a Fizyr gap to apologise for, it's a shared job. Frame Fizyr as detection and grasp working hand in hand with their WMS and barcode or labeling systems."
  },
  {
   "id": 27,
   "cat": "Pricing",
   "diff": "easy",
   "q": "How is this priced? Give me the model.",
-  "a": "We offer clear, all-in licensing that scales with your deployment — from a single cell to fleets across multiple sites — so the unit economics improve as you roll out. We'll put together pricing tailored to your number of cells and use case.",
+  "a": "We offer clear, all-in licensing that scales with your deployment, from a single cell to fleets across multiple sites, so the unit economics improve as you roll out. We'll put together pricing tailored to your number of cells and use case.",
   "beats": [
    "Clear all-in licensing that scales from a single cell to multi-site fleets.",
    "Unit economics improve as they roll out; tailored to cell count and use case."
@@ -542,7 +542,7 @@ const CARDS = [
    "Off-the-shelf vision can't match the speed, accuracy and adaptability demanding automation needs.",
    "Return on investment comes from keeping high-variety, high-throughput handling running."
   ],
-  "reframe": "Don't compete on sticker price. Anchor on what off-the-shelf vision can't do — speed, accuracy, adaptability — and tie it to keeping high-variety, high-throughput production running."
+  "reframe": "Don't compete on sticker price. Anchor on what off-the-shelf vision can't do, speed, accuracy, adaptability, and tie it to keeping high-variety, high-throughput production running."
  },
  {
   "id": 29,
@@ -551,7 +551,7 @@ const CARDS = [
   "q": "Can you give us a ballpark number now for budgeting?",
   "a": "Absolutely. Tell us a little about your application and cell count and we can provide an indicative budget number to support your planning, ahead of a detailed quote.",
   "beats": [
-   "Yes — an indicative budget number from application and cell count.",
+   "Yes, an indicative budget number from application and cell count.",
    "Positions a detailed quote as the next step."
   ]
  },
@@ -563,7 +563,7 @@ const CARDS = [
   "a": "Installation and commissioning are a normal part of bringing any vision-guided cell into production, and we set them out clearly in your proposal so there are no surprises. We'll walk you through what's covered by licensing versus deployment so you can plan the full picture with confidence.",
   "beats": [
    "Installation and commissioning are normal for any vision cell; set out clearly in the proposal.",
-   "Walk them through licensing versus deployment — no surprises."
+   "Walk them through licensing versus deployment, no surprises."
   ]
  },
  {
@@ -574,7 +574,7 @@ const CARDS = [
   "a": "A proof of concept is a focused, valuable step that lets you see performance on your own products before you commit, and we set out clearly what it includes and how it's priced in your proposal. We keep it efficient and tied to clear, measurable targets, so you gain a confident basis for your decision. Tell us about your application and we'll outline the right evaluation approach.",
   "beats": [
    "Proof of concept is a focused de-risking step; see performance on their products first.",
-   "Scope and price stated clearly; tied to measurable targets — don't promise free."
+   "Scope and price stated clearly; tied to measurable targets, don't promise free."
   ],
   "reframe": "Don't promise a free proof of concept. Sell it as a focused, valuable de-risking step tied to measurable targets, with scope and price stated clearly in the proposal."
  },
@@ -585,7 +585,7 @@ const CARDS = [
   "q": "Is this cloud-based? We can't have the line stop if our internet drops.",
   "a": "Fizyr OS runs on the edge, on-premise, so your operation isn't dependent on an internet connection to keep moving. Secure remote diagnostics are available with your permission to speed up support.",
   "beats": [
-   "Runs on the edge, on-premise — no internet dependency to keep moving.",
+   "Runs on the edge, on-premise, no internet dependency to keep moving.",
    "Secure remote diagnostics available with permission."
   ]
  },
@@ -629,7 +629,7 @@ const CARDS = [
   "q": "Our packaging changes constantly. How fast can the system keep up?",
   "a": "Quickly. Because Fizyr OS generalizes across items, most product or packaging changes are handled with no rework at all. Where a demanding new variant does call for tuning, we have a clear, efficient process to adapt the system and validate it against your targets, planned around your production schedule.",
   "beats": [
-   "Generalizes across items — most packaging changes need no rework.",
+   "Generalizes across items, most packaging changes need no rework.",
    "Demanding new variants: clear, efficient tuning and validation around their schedule."
   ]
  },
@@ -640,7 +640,7 @@ const CARDS = [
   "q": "Are we locked into one camera brand?",
   "a": "Fizyr OS is camera-agnostic and supports leading 3D and industrial cameras including Zivid, Photoneo, Ensenso and Basler. We help you select the right camera for your accuracy, field-of-view, cost and lead-time requirements as part of project scoping.",
   "beats": [
-   "Camera-agnostic — Zivid, Photoneo, Ensenso, Basler.",
+   "Camera-agnostic, Zivid, Photoneo, Ensenso, Basler.",
    "We help pick the right camera for accuracy, field of view, cost and lead time."
   ]
  },
@@ -662,8 +662,8 @@ const CARDS = [
   "q": "Will this need special power or networking in our cell?",
   "a": "Fizyr OS works with common industrial standards, including 24V DC environments and PoE-connected cameras, so it slots into typical cell infrastructure without special requirements.",
   "beats": [
-   "Common industrial standards — 24V DC, PoE cameras.",
-   "Slots into typical cell infrastructure — no special requirements."
+   "Common industrial standards, 24V DC, PoE cameras.",
+   "Slots into typical cell infrastructure, no special requirements."
   ]
  },
  {
@@ -673,7 +673,7 @@ const CARDS = [
   "q": "Does our conveyor surface matter for detection?",
   "a": "It can. Good contrast between your items and the belt helps the vision system perform at its best, so for difficult cases we recommend surfaces such as a matte, light-absorbing finish. We include belt and lighting guidance as part of scoping so the cell is set up for reliable detection from day one.",
   "beats": [
-   "Contrast helps — for hard cases recommend a matte, light-absorbing surface.",
+   "Contrast helps, for hard cases recommend a matte, light-absorbing surface.",
    "Belt and lighting guidance included in scoping."
   ]
  },
@@ -682,12 +682,12 @@ const CARDS = [
   "cat": "Hardware",
   "diff": "hard",
   "q": "Another vendor quoted a top-end 3D camera. Do we really need to pay for that?",
-  "a": "Not always premium. Because Fizyr OS is camera-agnostic, we match the camera to what your application actually requires — in many cases a mid-range 3D camera is more than enough for reliable picking, and some scenes, such as orientation or packing checks, can be handled with 2D. We help you choose the right balance of accuracy, field of view, cost and lead time, so you're not paying for more camera than your application needs.",
+  "a": "Not always premium. Because Fizyr OS is camera-agnostic, we match the camera to what your application actually requires, in many cases a mid-range 3D camera is more than enough for reliable picking, and some scenes, such as orientation or packing checks, can be handled with 2D. We help you choose the right balance of accuracy, field of view, cost and lead time, so you're not paying for more camera than your application needs.",
   "beats": [
-   "Camera-agnostic — match to the real need; mid-range 3D often plenty, 2D for some scenes.",
+   "Camera-agnostic, match to the real need; mid-range 3D often plenty, 2D for some scenes.",
    "Don't pay for more camera than the application needs; don't name competitors."
   ],
-  "reframe": "Don't validate a competitor's premium-camera quote. Match the camera to the actual need — mid-range 3D is often plenty, 2D for some scenes. Avoid naming competitors."
+  "reframe": "Don't validate a competitor's premium-camera quote. Match the camera to the actual need, mid-range 3D is often plenty, 2D for some scenes. Avoid naming competitors."
  }
 ];
 
@@ -748,8 +748,8 @@ function updateDrawn(){const total=pool().length; $('sDrawn').textContent=(total
 
 function spin(){
   if(flip.classList.contains('flipped'))flip.classList.remove('flipped');
-  if(deck.length===0){buildDeck(); flash('Deck reshuffled — '+pool().length+' cards');}
-  stopRec(); $('transcript').value=''; $('capStatus').textContent='Click to speak — or just type below.';
+  if(deck.length===0){buildDeck(); flash('Deck reshuffled, '+pool().length+' cards');}
+  stopRec(); $('transcript').value=''; $('capStatus').textContent='Click to speak, or just type below.';
   $('emptyState').style.display='none'; $('frontContent').style.display='flex';
   front.classList.add('spinning'); stopTimer();
   let ticks=0; const maxT=14+(Math.random()*6|0);
@@ -788,7 +788,7 @@ function reveal(){
   else if(ev.pct>=50){grade='Partial coverage'; gcls='g-ok';}
   else {grade='Thin coverage'; gcls='g-weak';}
   let sum='Covered <b>'+ev.hits+' of '+ev.total+'</b> key beats.';
-  if(current.reframe) sum+=' This is a <b>⚑ reframe</b> card — check the answer turned the gap into a strength.';
+  if(current.reframe) sum+=' This is a <b>⚑ reframe</b> card, check the answer turned the gap into a strength.';
   $('evalSummary').innerHTML=sum+'<br><span class="gradeTag '+gcls+'">'+grade+'</span>';
   // beats checklist
   const ul=$('bBeats'); ul.innerHTML='';
@@ -833,7 +833,7 @@ const ua=navigator.userAgent;
 const isChromeOnly=/Chrome\//.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua) && /Google Inc/.test(navigator.vendor||'');
 function voiceOff(msg){ if($('micBtn')) $('micBtn').style.display='none'; $('capStatus').textContent=msg; if($('speechNote')) $('speechNote').textContent=''; }
 if(!SR){
-  voiceOff('Voice input is not supported in this browser — type your answer (voice works in Google Chrome).');
+  voiceOff('Voice input is not supported in this browser, type your answer (voice works in Google Chrome).');
 }else if(!isChromeOnly){
   voiceOff('Voice input works in Google Chrome. In this browser, please type your answer below.');
 }else{
@@ -849,11 +849,11 @@ if(!SR){
   };
   rec.onerror=ev=>{
     if(ev.error==='network'||ev.error==='service-not-allowed'){
-      voiceOff('Voice input is not available in this browser — please type your answer (voice works in Google Chrome).');
+      voiceOff('Voice input is not available in this browser, please type your answer (voice works in Google Chrome).');
     }else if(ev.error==='not-allowed'){
-      $('capStatus').textContent='Microphone blocked — allow mic access in your browser, or type your answer.'; setMic(false);
+      $('capStatus').textContent='Microphone blocked, allow mic access in your browser, or type your answer.'; setMic(false);
     }else{
-      $('capStatus').textContent='Voice input unavailable ('+ev.error+') — you can type instead.'; setMic(false);
+      $('capStatus').textContent='Voice input unavailable ('+ev.error+'), you can type instead.'; setMic(false);
     }
   };
   rec.onend=()=>{ if(recOn){try{rec.start();}catch(e){}} };
