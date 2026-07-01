@@ -1,7 +1,10 @@
 push.bat
 publish.bat
 publish_auto.bat
+roulette_publish.bat
 setup_schedule.bat
+run_setup.bat
+schedule_setup.ps1
 push_log.txt
 schedule_log.txt
 node_modules/

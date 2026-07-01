@@ -224,7 +224,7 @@
 
   <footer>
     41 objections from the live Fizyr OS customer FAQ. Voice transcription uses your browser's built-in speech engine
-    (best in Chrome/Edge). Auto-scoring is keyword-based — a coaching aid, not a verdict; the human grade is final.
+    (works in Google Chrome; type your answer in other browsers). Auto-scoring is keyword-based — a coaching aid, not a verdict; the human grade is final.
     Weight scoring toward the <b>⚑ reframe</b> on flagged cards.
   </footer>
 
@@ -826,7 +826,17 @@ function scoreIt(pts){
 /* ---------- speech recognition ---------- */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let rec=null, recOn=false, baseText="";
-if(SR){
+/* Chromium's Web Speech API only ships a working backend in Google Chrome.
+   Edge / Brave / Opera expose the API but fail with a 'network' error, so we
+   steer those users to typing instead of showing a confusing error. */
+const ua=navigator.userAgent;
+const isChromeOnly=/Chrome\//.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua) && /Google Inc/.test(navigator.vendor||'');
+function voiceOff(msg){ if($('micBtn')) $('micBtn').style.display='none'; $('capStatus').textContent=msg; if($('speechNote')) $('speechNote').textContent=''; }
+if(!SR){
+  voiceOff('Voice input is not supported in this browser — type your answer (voice works in Google Chrome).');
+}else if(!isChromeOnly){
+  voiceOff('Voice input works in Google Chrome. In this browser, please type your answer below.');
+}else{
   rec=new SR(); rec.continuous=true; rec.interimResults=true; rec.lang='en-GB';
   rec.onresult=e=>{
     let interim='', finalAdd='';
@@ -837,12 +847,16 @@ if(SR){
     if(finalAdd) baseText=(baseText+' '+finalAdd).replace(/\s+/g,' ').trim();
     $('transcript').value=(baseText+(interim?' '+interim:'')).trim();
   };
-  rec.onerror=ev=>{$('capStatus').textContent='Mic error: '+ev.error+' — you can type instead.'; setMic(false);};
+  rec.onerror=ev=>{
+    if(ev.error==='network'||ev.error==='service-not-allowed'){
+      voiceOff('Voice input is not available in this browser — please type your answer (voice works in Google Chrome).');
+    }else if(ev.error==='not-allowed'){
+      $('capStatus').textContent='Microphone blocked — allow mic access in your browser, or type your answer.'; setMic(false);
+    }else{
+      $('capStatus').textContent='Voice input unavailable ('+ev.error+') — you can type instead.'; setMic(false);
+    }
+  };
   rec.onend=()=>{ if(recOn){try{rec.start();}catch(e){}} };
-}else{
-  $('micBtn').style.display='none';
-  $('capStatus').textContent='Voice capture not supported in this browser — type your answer (best in Chrome/Edge).';
-  $('speechNote').textContent='';
 }
 function setMic(on){
   recOn=on; const b=$('micBtn');
@@ -856,26 +870,4 @@ $('micBtn').onclick=()=> recOn?stopRec():startRec();
 /* ---------- timer ---------- */
 function startTimer(){
   let t=45; const fill=$('timefill'), txt=$('timetext'); $('timerWrap').style.display='flex';
-  fill.className='timefill'; fill.style.width='100%'; txt.textContent='0:45';
-  clearInterval(timerInt);
-  timerInt=setInterval(()=>{
-    t--; fill.style.width=Math.max(0,t/45*100)+'%';
-    txt.textContent='0:'+(t<10?'0':'')+Math.max(t,0);
-    if(t<=15&&t>7)fill.className='timefill warn';
-    if(t<=7)fill.className='timefill over';
-    if(t<=0){clearInterval(timerInt); txt.textContent='Time!';}
-  },1000);
-}
-function stopTimer(){clearInterval(timerInt); if(!timerToggle)$('timerWrap').style.display='none';}
-$('timerToggle').onchange=e=>{timerToggle=e.target.checked; if(!timerToggle){stopTimer();$('timerWrap').style.display='none';}};
-
-$('spinBtn').onclick=spin; $('spinBtn2').onclick=spin; $('revealBtn').onclick=reveal;
-document.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>scoreIt(+b.dataset.pts));
-
-let toastT;
-function flash(msg){const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1500);}
-
-buildDeck();
-</script>
-</body>
-</html>
+  
