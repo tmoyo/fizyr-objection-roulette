@@ -134,7 +134,7 @@
     <div class="scoreboard">
       <div class="stat"><div class="n" id="sScore">0</div><div class="l">Score</div></div>
       <div class="stat"><div class="n" id="sStreak">0</div><div class="l">Streak</div></div>
-      <div class="stat"><div class="n" id="sDrawn">0/41</div><div class="l">Drawn</div></div>
+      <div class="stat"><div class="n" id="sDrawn">0/56</div><div class="l">Drawn</div></div>
     </div>
   </header>
 
@@ -223,7 +223,7 @@
   </div>
 
   <footer>
-    41 objections from the live Fizyr OS customer FAQ. Voice transcription uses your browser's built-in speech engine
+    56 objections from the live Fizyr OS customer FAQ. Voice transcription uses your browser's built-in speech engine
     (works in Google Chrome; type your answer in other browsers). Auto-scoring is keyword-based, a coaching aid, not a verdict; the human grade is final.
     Weight scoring toward the <b>⚑ reframe</b> on flagged cards.
   </footer>
@@ -344,6 +344,28 @@ const CARDS = [
  },
  {
   "id": 11,
+  "cat": "Capabilities",
+  "diff": "medium",
+  "q": "Who performs the AI training and annotation?",
+  "a": "Fizyr provides professional data annotation and model training as a service, which keeps quality high and the effort off your team. If you prefer, your team can annotate your own data as well, which can reduce training time and cost. Either way, we make sure the production model meets your accuracy targets.",
+  "beats": [
+   "Fizyr provides professional data annotation and model training as a service, which keeps quality high and the effort off your team.",
+   "If you prefer, your team can annotate your own data as well, which can reduce training time and cost."
+  ]
+ },
+ {
+  "id": 12,
+  "cat": "Capabilities",
+  "diff": "medium",
+  "q": "Can we retrain the models ourselves?",
+  "a": "Today, model training is handled by Fizyr as a service, so you get consistent, production-grade quality without needing an in-house data science team. You can contribute your own annotations to speed things up and lower cost, and we manage the training and validation to reach your targets.",
+  "beats": [
+   "Today, model training is handled by Fizyr as a service, so you get consistent, production-grade quality without needing an in-house data science team.",
+   "You can contribute your own annotations to speed things up and lower cost, and we manage the training and validation to reach your targets."
+  ]
+ },
+ {
+  "id": 13,
   "cat": "Accuracy",
   "diff": "easy",
   "q": "What accuracy can you actually guarantee? We've been burned by vision before.",
@@ -354,7 +376,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 12,
+  "id": 14,
   "cat": "Accuracy",
   "diff": "easy",
   "q": "Our line is fast. Won't the camera be the bottleneck?",
@@ -365,7 +387,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 13,
+  "id": 15,
   "cat": "Accuracy",
   "diff": "medium",
   "q": "What throughput can you really hit in production, not on a slide?",
@@ -376,7 +398,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 14,
+  "id": 16,
   "cat": "Accuracy",
   "diff": "medium",
   "q": "We handle shiny sheet metal and our lighting isn't great. Doesn't that wreck vision systems?",
@@ -387,7 +409,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 15,
+  "id": 17,
   "cat": "Accuracy",
   "diff": "easy",
   "q": "Our loads are messy, leaning, edge-to-edge, slip sheets. Can it deal with real stacks?",
@@ -398,7 +420,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 16,
+  "id": 18,
   "cat": "Accuracy",
   "diff": "easy",
   "q": "Doesn't it slow down once there are lots of items in the scene?",
@@ -409,7 +431,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 17,
+  "id": 19,
   "cat": "Integration",
   "diff": "medium",
   "q": "How does this connect to our robot and PLC? We don't want a custom integration headache.",
@@ -420,7 +442,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 18,
+  "id": 20,
   "cat": "Integration",
   "diff": "easy",
   "q": "We have our own automation platform. Can Fizyr run inside it rather than dictating our architecture?",
@@ -431,7 +453,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 19,
+  "id": 21,
   "cat": "Integration",
   "diff": "hard",
   "q": "Does it read barcodes and give us reporting too?",
@@ -443,7 +465,7 @@ const CARDS = [
   "reframe": "Position barcode reading and reporting as jobs for complementary cell systems, Fizyr's value is being the fastest, most accurate eyes. Offer to advise on the fit."
  },
  {
-  "id": 20,
+  "id": 22,
   "cat": "Integration",
   "diff": "easy",
   "q": "Can it pick off a moving conveyor, or do we have to index-stop the line?",
@@ -454,7 +476,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 21,
+  "id": 23,
   "cat": "Integration",
   "diff": "medium",
   "q": "We don't want to wait for hardware on site to start integrating. Is that possible?",
@@ -465,7 +487,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 22,
+  "id": 24,
   "cat": "Integration",
   "diff": "medium",
   "q": "Does it remember anything between cycles, or start from scratch each time?",
@@ -476,7 +498,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 23,
+  "id": 25,
   "cat": "Integration",
   "diff": "medium",
   "q": "Do we need a separate vision system for every robot? That gets expensive fast.",
@@ -487,7 +509,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 24,
+  "id": 26,
   "cat": "Integration",
   "diff": "medium",
   "q": "Our gripper has individually controlled vacuum zones. Can your software actually drive that?",
@@ -498,7 +520,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 25,
+  "id": 27,
   "cat": "Integration",
   "diff": "hard",
   "q": "What happens when it just can't pick an item? Does the line jam?",
@@ -510,7 +532,7 @@ const CARDS = [
   "reframe": "Don't let it sound like a failure mode. The line keeps moving; retry or set-aside is normal cell logic on the robot or PLC, and Fizyr keeps feeding fresh picks."
  },
  {
-  "id": 26,
+  "id": 28,
   "cat": "Integration",
   "diff": "hard",
   "q": "We need to pick a specific item from a mixed bin using our WMS data. Can it identify which one?",
@@ -522,7 +544,62 @@ const CARDS = [
   "reframe": "Identification of a specific SKU is not a Fizyr gap to apologise for, it's a shared job. Frame Fizyr as detection and grasp working hand in hand with their WMS and barcode or labeling systems."
  },
  {
-  "id": 27,
+  "id": 29,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "Does Fizyr OS support collision-free path planning?",
+  "a": "Yes. Fizyr OS supports collision-free path planning through its API. Your integrator configures the robot, scene and gripper collision models, so the system can plan picks that avoid collisions in your specific cell.",
+  "beats": [
+   "Yes.",
+   "Fizyr OS supports collision-free path planning through its API."
+  ]
+ },
+ {
+  "id": 30,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "Are moving or linear-axis cameras supported?",
+  "a": "Yes. Linear-axis and moving-camera configurations are supported, so you can cover larger work areas or follow the robot where your application needs it. We confirm the right setup for your cell during scoping.",
+  "beats": [
+   "Yes.",
+   "Linear-axis and moving-camera configurations are supported, so you can cover larger work areas or follow the robot where your application needs it."
+  ]
+ },
+ {
+  "id": 31,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "Can different robot brands work together in one system?",
+  "a": "Yes. Fizyr OS communicates through standard interfaces and supports multi-brand robot environments, so mixed fleets can run on one vision platform. This keeps your architecture consistent even when cells use different robots.",
+  "beats": [
+   "Yes.",
+   "Fizyr OS communicates through standard interfaces and supports multi-brand robot environments, so mixed fleets can run on one vision platform."
+  ]
+ },
+ {
+  "id": 32,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "Is there an API and SDK, and do you help us get started?",
+  "a": "Yes. Complete API and SDK documentation is available, and we provide partner onboarding so your team can build and test the integration with confidence. The open interfaces make it straightforward to embed Fizyr as the vision layer of your cell.",
+  "beats": [
+   "Yes.",
+   "Complete API and SDK documentation is available, and we provide partner onboarding so your team can build and test the integration with confidence."
+  ]
+ },
+ {
+  "id": 33,
+  "cat": "Integration",
+  "diff": "medium",
+  "q": "Can we export production data to our MES or reporting systems?",
+  "a": "Yes. Event logs, KPIs and production data can be published to your MES, HMI or reporting systems through the API, so the cell's performance is visible in the tools your team already uses.",
+  "beats": [
+   "Yes.",
+   "Event logs, KPIs and production data can be published to your MES, HMI or reporting systems through the API, so the cell's performance is visible in the tools your team already uses."
+  ]
+ },
+ {
+  "id": 34,
   "cat": "Pricing",
   "diff": "easy",
   "q": "How is this priced? Give me the model.",
@@ -533,7 +610,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 28,
+  "id": 35,
   "cat": "Pricing",
   "diff": "hard",
   "q": "Honestly, why pay for Fizyr when a cheaper off-the-shelf vision could do it?",
@@ -545,7 +622,7 @@ const CARDS = [
   "reframe": "Don't compete on sticker price. Anchor on what off-the-shelf vision can't do, speed, accuracy, adaptability, and tie it to keeping high-variety, high-throughput production running."
  },
  {
-  "id": 29,
+  "id": 36,
   "cat": "Pricing",
   "diff": "easy",
   "q": "Can you give us a ballpark number now for budgeting?",
@@ -556,7 +633,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 30,
+  "id": 37,
   "cat": "Pricing",
   "diff": "medium",
   "q": "Is installation included in the license, or is that another line item?",
@@ -567,7 +644,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 31,
+  "id": 38,
   "cat": "Pricing",
   "diff": "hard",
   "q": "Is the proof of concept free, or are we paying for that too?",
@@ -579,7 +656,62 @@ const CARDS = [
   "reframe": "Don't promise a free proof of concept. Sell it as a focused, valuable de-risking step tied to measurable targets, with scope and price stated clearly in the proposal."
  },
  {
-  "id": 32,
+  "id": 39,
+  "cat": "Pricing",
+  "diff": "medium",
+  "q": "What licensing models are available?",
+  "a": "Fizyr OS comes in two commercial models, so you can match it to your investment strategy. A perpetual license is a one-time software license of [€--,---], with annual maintenance and support at [€--,---] that covers security updates, bug fixes, network updates and technical support. A subscription is an annual fee of [€--,---] that includes the software, maintenance, support and all software upgrades. We confirm current pricing and the right fit for your situation in your proposal.",
+  "beats": [
+   "Fizyr OS comes in two commercial models, so you can match it to your investment strategy.",
+   "A perpetual license is a one-time software license of [€--,---], with annual maintenance and support at [€--,---] that covers security updates, bug fixes, network updates and technical support."
+  ]
+ },
+ {
+  "id": 40,
+  "cat": "Pricing",
+  "diff": "medium",
+  "q": "Are there additional paid AI modules or feature add-ons?",
+  "a": "No. Every capability of Fizyr OS is included in the license, with no optional feature modules to buy. As long as your selected hardware supports the application, you can use the full range of software functionality.",
+  "beats": [
+   "No.",
+   "Every capability of Fizyr OS is included in the license, with no optional feature modules to buy."
+  ]
+ },
+ {
+  "id": 41,
+  "cat": "Pricing",
+  "diff": "medium",
+  "q": "What ongoing costs should we plan for?",
+  "a": "Beyond your chosen license model, plan for annual maintenance if you take the perpetual license, any optional hardware upgrades for more demanding applications, and AI retraining only if you introduce completely new product categories. There are no per-feature fees to budget for.",
+  "beats": [
+   "Beyond your chosen license model, plan for annual maintenance if you take the perpetual license, any optional hardware upgrades for more demanding applications, and AI retraining only if you introduce completely new product categories.",
+   "There are no per-feature fees to budget for."
+  ]
+ },
+ {
+  "id": 42,
+  "cat": "Pricing",
+  "diff": "medium",
+  "q": "How should we think about ROI?",
+  "a": "Calculate ROI for the complete robotic automation solution, not the vision software on its own. The strongest drivers are the number of operating shifts, labour savings, throughput, deployment scale and future scalability. We can share two-page ROI summaries and a whitepaper to help you build the case with your own numbers.",
+  "beats": [
+   "Calculate ROI for the complete robotic automation solution, not the vision software on its own.",
+   "The strongest drivers are the number of operating shifts, labour savings, throughput, deployment scale and future scalability."
+  ]
+ },
+ {
+  "id": 43,
+  "cat": "Pricing",
+  "diff": "medium",
+  "q": "How does pricing scale for larger deployments?",
+  "a": "Volume discounts are available for multi-license purchases, and multi-robot cells can often share cameras and compute, which lowers infrastructure cost and strengthens the business case. We size this with you as your rollout grows.",
+  "beats": [
+   "Volume discounts are available for multi-license purchases, and multi-robot cells can often share cameras and compute, which lowers infrastructure cost and strengthens the business case.",
+   "We size this with you as your rollout grows."
+  ]
+ },
+ {
+  "id": 44,
   "cat": "Deployment",
   "diff": "easy",
   "q": "Is this cloud-based? We can't have the line stop if our internet drops.",
@@ -590,7 +722,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 33,
+  "id": 45,
   "cat": "Deployment",
   "diff": "easy",
   "q": "What support do we get, and can you handle a rollout across several sites?",
@@ -601,7 +733,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 34,
+  "id": 46,
   "cat": "Deployment",
   "diff": "medium",
   "q": "If something breaks at 2am in production, then what?",
@@ -612,7 +744,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 35,
+  "id": 47,
   "cat": "Deployment",
   "diff": "easy",
   "q": "Can we limit the camera to just the robot's working area? We don't want it seeing the whole cell.",
@@ -623,7 +755,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 36,
+  "id": 48,
   "cat": "Deployment",
   "diff": "medium",
   "q": "Our packaging changes constantly. How fast can the system keep up?",
@@ -634,7 +766,40 @@ const CARDS = [
   ]
  },
  {
-  "id": 37,
+  "id": 49,
+  "cat": "Deployment",
+  "diff": "medium",
+  "q": "Can the system run offline?",
+  "a": "Yes. Internet access is optional, so the cell keeps running without a connection. When a secure connection is available, remote diagnostics and support can be used to help your team quickly.",
+  "beats": [
+   "Yes.",
+   "Internet access is optional, so the cell keeps running without a connection."
+  ]
+ },
+ {
+  "id": 50,
+  "cat": "Deployment",
+  "diff": "medium",
+  "q": "What makes an implementation successful?",
+  "a": "The most successful projects start with complete SKU coverage before go-live, then fine-tune the configuration to get the best picking accuracy and throughput. We guide you through both, so the cell performs well from day one and keeps improving.",
+  "beats": [
+   "The most successful projects start with complete SKU coverage before go-live, then fine-tune the configuration to get the best picking accuracy and throughput.",
+   "We guide you through both, so the cell performs well from day one and keeps improving."
+  ]
+ },
+ {
+  "id": 51,
+  "cat": "Deployment",
+  "diff": "medium",
+  "q": "What should we do early in the project to reduce risk?",
+  "a": "Install the camera in your production environment before the robot is deployed. This validates your real product mix, surfaces any training needs early, and shortens the Site Acceptance Test. It is a simple step that takes risk out of go-live.",
+  "beats": [
+   "Install the camera in your production environment before the robot is deployed.",
+   "This validates your real product mix, surfaces any training needs early, and shortens the Site Acceptance Test."
+  ]
+ },
+ {
+  "id": 52,
   "cat": "Hardware",
   "diff": "easy",
   "q": "Are we locked into one camera brand?",
@@ -645,7 +810,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 38,
+  "id": 53,
   "cat": "Hardware",
   "diff": "easy",
   "q": "What hardware do we need to run this? Some special server?",
@@ -656,7 +821,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 39,
+  "id": 54,
   "cat": "Hardware",
   "diff": "easy",
   "q": "Will this need special power or networking in our cell?",
@@ -667,7 +832,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 40,
+  "id": 55,
   "cat": "Hardware",
   "diff": "easy",
   "q": "Does our conveyor surface matter for detection?",
@@ -678,7 +843,7 @@ const CARDS = [
   ]
  },
  {
-  "id": 41,
+  "id": 56,
   "cat": "Hardware",
   "diff": "hard",
   "q": "Another vendor quoted a top-end 3D camera. Do we really need to pay for that?",
@@ -737,7 +902,7 @@ function evaluate(card, answer){
 const fwrap=$('filters');
 CATS.forEach(c=>{
   const b=document.createElement('button');
-  b.className='chip'+(c==='All'?' active':''); b.textContent=c==='All'?'All · 41':c;
+  b.className='chip'+(c==='All'?' active':''); b.textContent=c==='All'?'All · 56':c;
   b.onclick=()=>{filter=c; document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); buildDeck(); flash(c==='All'?'Full deck loaded':c+' deck loaded');};
   fwrap.appendChild(b);
 });
@@ -767,7 +932,7 @@ function land(){
 }
 function renderFront(c){
   $('fCat').textContent=c.cat; $('fDiff').textContent=c.diff; $('fDiff').className='diff '+c.diff;
-  $('fNum').textContent='Card #'+c.id+' of 41';
+  $('fNum').textContent='Card #'+c.id+' of 56';
   $('fObjection').innerHTML='<span class="quote-mark">“</span>'+c.q+'<span class="quote-mark">”</span>';
   if(timerToggle) startTimer();
 }
@@ -777,7 +942,7 @@ function reveal(){
   stopRec(); stopTimer();
   const ev=evaluate(current, $('transcript').value);
   $('bCat').textContent=current.cat; $('bDiff').textContent=current.diff; $('bDiff').className='diff '+current.diff;
-  $('bNum').textContent='Card #'+current.id+' of 41';
+  $('bNum').textContent='Card #'+current.id+' of 56';
   // ring
   $('ring').style.setProperty('--p', ev.pct);
   $('ringPct').textContent=ev.pct+'%';
